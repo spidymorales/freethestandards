@@ -237,9 +237,9 @@
         word.classList.remove("in-start");
         setMeter(r);
         meter.classList.remove("swap");
-      }, 380);
+      }, 500);
     };
-    setInterval(next, reduce ? 4000 : 2600);
+    setInterval(next, reduce ? 6000 : 4500);
     hero.addEventListener("mouseenter", function () { paused = true; });
     hero.addEventListener("mouseleave", function () { paused = false; });
     if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(hero);

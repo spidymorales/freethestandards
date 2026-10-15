@@ -140,7 +140,7 @@ h2 + .lede, .sec-num + h2 { margin-top: 0; }
 .hero h1.kinetic .l2 { color: #b9c4d6; }
 .rot-wrap { display: inline-block; position: relative; color: #fff; vertical-align: bottom; overflow: hidden; padding-bottom: 0.08em; }
 .rot-wrap::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0.02em; height: 3px; background: #fff; transform-origin: left; }
-.rot { display: inline-block; transition: transform .45s cubic-bezier(.2,.7,.2,1), opacity .45s ease; }
+.rot { display: inline-block; transition: transform .6s cubic-bezier(.2,.7,.2,1), opacity .6s ease; }
 .rot.out { transform: translateY(-105%); opacity: 0; }
 .rot.in-start { transform: translateY(105%); opacity: 0; transition: none; }
 .hero .lede { color: #dbe1ea; }
