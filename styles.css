@@ -1151,3 +1151,50 @@ details.case-steps[open] > summary::after { content: "–"; }
 .reg-tip { margin: 0; font-size: 0.92rem; color: var(--ink); }
 .btn[hidden] { display: none !important; }
 [hidden] { display: none !important; }
+
+/* Judge's key line on each case card; court documents drawer */
+.card-quote { margin: 14px 0 0; padding-left: 12px; border-left: 2px solid var(--amber); font-weight: 600; font-size: 0.95rem; line-height: 1.45; color: var(--ink); }
+details.docs-drawer { margin: -40px 0 64px; border: 0; border-top: 1px solid var(--hairline); border-radius: 0; }
+details.docs-drawer > summary { padding: 16px 0; color: var(--ink); font-size: 1rem; }
+details.docs-drawer[open] > summary { border-bottom: 0; }
+details.docs-drawer .doc-links { display: flex; flex-wrap: wrap; gap: 8px; }
+details.docs-drawer .tl-note { margin: 14px 0 20px; }
+.honest.honest-early { margin-bottom: 56px; }
+/* Section rhythm after the "more to the point" cuts */
+#check { background: var(--paper); }
+#built { background: #fff; }
+#math { background: var(--paper); }
+#specwriter { background: #fff; }
+#people { background: var(--paper); }
+#act { background: #fff; }
+#faq { background: var(--paper); }
+.score .card .card-quote + a.small { display: inline-block; margin-top: 12px; }
+
+/* ---------- Photography (Unsplash) ---------- */
+.hero.has-photo { background: var(--ink); }
+.hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .22; filter: grayscale(.35) contrast(1.05); pointer-events: none; }
+.hero.has-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(17,17,17,.92) 0%, rgba(17,17,17,.72) 55%, rgba(17,17,17,.45) 100%); pointer-events: none; }
+.hero.has-photo .hero-inner { z-index: 1; }
+.photo-band { margin: -90px 0 72px; height: clamp(220px, 34vw, 420px); overflow: hidden; background: var(--hairline); }
+.photo-band img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 760px) { .photo-band { margin: -90px 0 48px; } }
+.photo-credits { font-size: 0.78rem; color: inherit; opacity: .7; margin: 0 0 14px; }
+
+/* "There's no real alternative" */
+.noalt-grid { display: grid; gap: 16px; margin-top: 28px; }
+@media (min-width: 840px) { .noalt-grid { grid-template-columns: 1fr 1fr; gap: 24px; } }
+.noalt-card { background: #fff; border: 1px solid var(--hairline); border-top: 3px solid var(--ink); border-radius: 2px; padding: 24px 26px; }
+.noalt-card .status { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+.noalt-card .flag { width: 24px; height: 12px; box-shadow: 0 0 0 1px rgba(17,17,17,.12); }
+.noalt-card p:last-child { margin: 0; font-size: 1.02rem; }
+.noalt-csi { margin-top: 24px; padding: 26px 30px; background: var(--ink); color: #fff; border-radius: 2px; }
+.noalt-csi p:last-child { margin: 0; font-size: 1.08rem; line-height: 1.6; color: rgba(255,255,255,.93); }
+.noalt-csi .exhibit-tag { color: var(--amber); }
+.noalt-csi .src { color: rgba(255,255,255,.75); }
+#noalt { background: #fff; }
+#built { background: var(--paper); }
+#math { background: #fff; }
+#specwriter { background: var(--paper); }
+#people { background: #fff; }
+#act { background: var(--paper); }
+#faq { background: #fff; }

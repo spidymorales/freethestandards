@@ -231,14 +231,6 @@
           "Thank you,\n" + (v.name || "{Name}") + (v.firm ? ", " + v.firm : "");
       }
     },
-    official: {
-      subject: "Licensing claims on a standard required in public procurement",
-      body: function (v) {
-        return "Dear " + (v.to || "{Name}") + ",\n\n" +
-          "Public construction projects routinely require specifications organized using MasterFormat. CSI, which maintains the standard, now says organizations that use it need a paid annual licence, priced on firm revenue. I'd ask that your office seek clarification on whether firms delivering public projects will be required to pay for this licence, and what that means for project costs.\n\n" +
-          "Sincerely,\n" + (v.name || "{Name}") + (v.firm ? ", " + v.firm : "");
-      }
-    },
     owner: {
       subject: "MasterFormat licensing and our project documentation",
       body: function (v) {
@@ -259,16 +251,6 @@
           "What it would cost my firm:\n" + price + "\n\n" +
           "Why we can't easily avoid it:\n[e.g. our public clients require specifications organized using MasterFormat; it is written into our contracts and procurement documents]\n\n" +
           "Anything else you should know:\n[e.g. licensing letters or demands you've received, with dates and amounts]";
-      }
-    },
-    client: {
-      subject: "Industry update: MasterFormat licensing claims",
-      body: function (v) {
-        return "Hi " + (v.to || "{Name}") + ",\n\n" +
-          "I wanted to put a recent industry development on your radar. CSI now says a licence is required whenever MasterFormat or UniFormat is used \"in revenue-generating professional services,\" including specifications, estimates, BIM and project documentation. Its fees are based on firm revenue.\n\n" +
-          "Three small firms (ZeroDocs in the US, and Bibliotech and Jm|F in Canada) are challenging CSI's claims in court. In September 2026, a US federal judge ruled that MasterFormat's numbers, titles and taxonomy are not protected by copyright. The litigation is ongoing in both countries.\n\n" +
-          "We're following developments with our professional association. You can read the court documents and background at " + SITE_URL + ".\n\n" +
-          "Best regards,\n" + (v.name || "{Name}") + (v.firm ? ", " + v.firm : "");
       }
     }
   };
@@ -408,7 +390,7 @@
   // Contents index built from the section heads
   var toc = document.getElementById("toc");
   var heads = document.querySelectorAll(".sec-head");
-  var SHORT = { check: "Your work", playbook: "The playbook", math: "The math", everyone: "The whole industry", specwriter: "A spec writer sued", fineprint: "The fine print", courts: "The courts", built: "You built it", people: "Who’s being sued", act: "Take action", faq: "Questions" };
+  var SHORT = { check: "Your work", playbook: "The playbook", math: "The math", everyone: "The whole industry", noalt: "No alternative", specwriter: "A spec writer sued", fineprint: "The fine print", courts: "The courts", built: "You built it", people: "Who’s being sued", act: "Take action", faq: "Questions" };
   if (toc && heads.length) {
     var ol = toc.querySelector("ol"), links = [];
     heads.forEach(function (hd) {
