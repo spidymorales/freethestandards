@@ -19,121 +19,6 @@
   }
   if (/[?&]review=1/.test(location.search)) setReview(true);
 
-  // ---------- "Am I affected?" check: role -> uses -> revenue band -> published price + CSI's own words ----------
-  // Prices: theconstructionstandard.com/pricing (DISPLAY_PRICE_MAP), checked Oct 15, 2026. USD per year.
-  // m = CSI-member price where one is published. null = "contact sales".
-  (function () {
-    var am = document.getElementById("am");
-    if (!am) return;
-    var PRICES = {
-      pro: [["Under $2M", 699, 399], ["$2M–5M", 1399, 999], ["$5M–10M", 3199, 2499], ["$10M–25M", 12600], ["$25M or more", null]],
-      mfr: [["Under $2M", 699], ["$2M–5M", 1399], ["$5M–10M", 3199], ["$10M–25M", 12600], ["$25M or more", null]],
-      con: [["Under $5M", 2000, 1599], ["$5M–20M", 9000, 6999], ["$20M or more", null]],
-      own: [["Under $10M", 9800], ["$10M or more", null]],
-      sw:  [["Under $5M", 4400], ["$5M–25M", 14750], ["$25M or more", null]]
-    };
-    var FAQ = "https://theconstructionstandard.com/faq#:~:text=";
-    function q(text, href, label) {
-      return "<li>“" + text + "”<a class=\"src\" href=\"" + href + "\" target=\"_blank\" rel=\"noopener\">" + label + " ↗</a></li>";
-    }
-    var ROLE_Q = q("A license is required when CSI standards are used in revenue-generating professional services. This applies to architects, engineers, contractors, owners, manufacturers, and software platforms.", FAQ + "This%20applies%20to%20architects", "Licensing FAQ");
-    var USE_Q = {
-      specs: q("If your organization uses MasterFormat numbers and titles in specifications or deliverables… a license is required.", FAQ + "MasterFormat%20numbers%20and%20titles%20in%20specifications", "Licensing FAQ"),
-      masters: q("If more than one person is using the content, or if your organization needs standards access across shared templates, deliverables, workflows, or systems, CSI Dynamic Standards is the appropriate path.", FAQ + "shared%20templates", "Licensing FAQ"),
-      files: q("…including estimates, BIM, file naming systems, and project documentation—a license is required.", FAQ + "file%20naming%20systems", "Licensing FAQ"),
-      pdf: q("Those legacy PDF rights were granted to a single user only.", FAQ + "single%20user%20only", "Licensing FAQ"),
-      software: q("Your firm needs its own license for its professional use of the standards, separate from any software subscription.", "https://www.csiresources.org/standards/cds-faq#:~:text=Your%20firm%20needs%20its%20own%20license", "CSI FAQ")
-    };
-
-    var steps = am.querySelectorAll(".am-step");
-    var tabs = am.querySelectorAll(".am-progress button");
-    var bandsEl = document.getElementById("amBands");
-    var out = document.getElementById("amOut"), panel = out.closest(".am-result");
-    var state = { role: null, sign: "", band: null };
-    am.classList.add("js");
-
-    function money(n) { return "$" + n.toLocaleString("en-US"); }
-    function show(n) {
-      steps.forEach(function (s) { s.classList.toggle("on", +s.dataset.step === n); });
-      tabs.forEach(function (t) {
-        var k = +t.dataset.go;
-        if (k === n) t.setAttribute("aria-current", "step"); else t.removeAttribute("aria-current");
-        t.classList.toggle("done", k < n || (k === 3 && state.band !== null));
-      });
-    }
-    function enable(n) { tabs.forEach(function (t) { if (+t.dataset.go <= n) t.disabled = false; }); }
-
-    function buildBands() {
-      var rows = PRICES[state.role] || [];
-      bandsEl.innerHTML = rows.map(function (r, i) {
-        return "<label class=\"chip\"><input type=\"radio\" name=\"am-band\" value=\"" + i + "\"><span>" + r[0] + "</span></label>";
-      }).join("");
-      state.band = null;
-    }
-
-    function render() {
-      if (state.role === null || (state.role !== "gov" && state.band === null)) { out.hidden = true; panel.hidden = true; return; }
-      var price = document.getElementById("amPrice"), sub = document.getElementById("amSub"), label = document.getElementById("amLabel");
-      if (state.role === "gov") {
-        label.textContent = "CSI’s published price for public bodies";
-        price.textContent = "Not published";
-        sub.innerHTML = "Governments, school boards and universities must “contact sales.” Many of them require MasterFormat in their own procurement.";
-      } else {
-        var row = PRICES[state.role][state.band];
-        label.textContent = "CSI’s published price for your firm";
-        if (row[1] === null) {
-          price.textContent = "Not published";
-          sub.innerHTML = "Firms your size (" + row[0] + " revenue) must “contact sales.”";
-        } else {
-          price.innerHTML = money(row[1]) + "<span class=\"per\"> a year</span>";
-          sub.innerHTML = "Annual licence for " + row[0] + " revenue." + (row[2] ? " CSI members: " + money(row[2]) + "." : "");
-        }
-      }
-      var items = [ROLE_Q];
-      am.querySelectorAll("input[name=am-use]:checked").forEach(function (b) { if (USE_Q[b.value]) items.push(USE_Q[b.value]); });
-      document.getElementById("amQuotes").innerHTML = items.join("");
-      window.FTS_CHECK = { summary: (label.textContent + ": " + price.textContent + (sub.textContent ? ". " + sub.textContent : "")).replace(/\.\./g, ".") };
-      document.dispatchEvent(new Event("fts:check"));
-      panel.hidden = false; out.hidden = false;
-    }
-
-    am.addEventListener("change", function (e) {
-      var t = e.target;
-      if (t.name === "am-role") {
-        state.role = t.value; state.sign = t.dataset.sign || "";
-        buildBands(); enable(2); show(2); render();
-      } else if (t.name === "am-band") {
-        state.band = +t.value; render(); show(3); reveal();
-      } else if (t.name === "am-use") {
-        render();
-      }
-    });
-    // On narrow screens the answer sits below the steps: bring it into view once complete.
-    function reveal() {
-      if (window.innerWidth >= 980) return;
-      var r = out.getBoundingClientRect();
-      if (r.top > window.innerHeight * 0.6) out.closest(".am-result").scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    am.querySelector("[data-next]").addEventListener("click", function () {
-      if (state.role === "gov") { enable(2); render(); reveal(); return; }
-      enable(3); show(3);
-    });
-    tabs.forEach(function (t) { t.addEventListener("click", function () { show(+t.dataset.go); }); });
-    document.getElementById("amReset").addEventListener("click", function () {
-      am.querySelectorAll("input").forEach(function (i) { i.checked = false; });
-      state = { role: null, sign: "", band: null };
-      bandsEl.innerHTML = "";
-      tabs.forEach(function (t) { if (+t.dataset.go > 1) t.disabled = true; });
-      render(); show(1);
-    });
-    // Carry the role into the signature form.
-    document.getElementById("amSign").addEventListener("click", function () {
-      var sel = document.querySelector("#sign select[name=role]");
-      if (sel && state.sign) sel.value = state.sign;
-    });
-    show(1);
-  })();
-
   // ---------- How the industry built it: year rail ----------
   (function () {
     var h = document.getElementById("hist");
@@ -346,13 +231,13 @@
 
   // Who the licensing FAQ names, with the published price range (theconstructionstandard.com/pricing, checked Oct 15, 2026)
   var ROLES = [
-    { w: "architects", role: "architecture firms", price: "$699 – $12,600", note: "Top published tier: $10–25M revenue. Larger firms: “contact sales.”" },
-    { w: "engineers", role: "engineering firms", price: "$699 – $12,600", note: "Top published tier: $10–25M revenue. Larger firms: “contact sales.”" },
-    { w: "specifiers", role: "specifiers", price: "$699 – $12,600", note: "Top published tier: $10–25M revenue. Larger firms: “contact sales.”" },
-    { w: "contractors", role: "contractors", price: "$2,000 – $9,000", note: "Top published tier: $5–20M revenue. Larger firms: “contact sales.”" },
-    { w: "owners", role: "owners and facility managers", price: "$9,800", note: "For owners under $10M revenue. Larger owners: “contact sales.”" },
-    { w: "manufacturers", role: "building product manufacturers", price: "$699 – $12,600", note: "Top published tier: $10–25M revenue. Larger firms: “contact sales.”" },
-    { w: "software companies", role: "software companies", price: "$4,400 – $14,750", note: "Top published tier: $5–25M revenue. Larger firms: “contact sales.”" }
+    { w: "architects", role: "architecture firms" },
+    { w: "engineers", role: "engineering firms" },
+    { w: "specifiers", role: "specifiers" },
+    { w: "contractors", role: "contractors" },
+    { w: "owners", role: "owners and facility managers" },
+    { w: "manufacturers", role: "building product manufacturers" },
+    { w: "software companies", role: "software companies" }
   ];
   var word = document.getElementById("rotWord");
   var meter = document.querySelector(".meter");
@@ -390,7 +275,7 @@
   // Contents index built from the section heads
   var toc = document.getElementById("toc");
   var heads = document.querySelectorAll(".sec-head");
-  var SHORT = { check: "Your work", playbook: "The playbook", math: "The math", everyone: "The whole industry", noalt: "No alternative", specwriter: "A spec writer sued", fineprint: "The fine print", courts: "The courts", built: "You built it", people: "Who’s being sued", act: "Take action", faq: "Questions" };
+  var SHORT = { playbook: "The playbook", math: "The math", everyone: "The whole industry", noalt: "No alternative", specwriter: "A spec writer sued", fineprint: "The fine print", courts: "The courts", built: "You built it", people: "Who’s being sued", act: "Take action", faq: "Questions" };
   if (toc && heads.length) {
     var ol = toc.querySelector("ol"), links = [];
     heads.forEach(function (hd) {
